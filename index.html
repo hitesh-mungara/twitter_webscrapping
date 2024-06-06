@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Trending Topics</title>
+    <script>
+        async function runScript() {
+            const response = await fetch('/run_script');
+            const result = await response.json();
+
+            const resultContainer = document.getElementById('result');
+            if (result.error) {
+                resultContainer.innerHTML = `<p>Error: ${result.error}</p>`;
+            } else {
+                const date = new Date(result.end_time);
+                const trends = `
+                    <p>These are the most happening topics as on ${date}</p>
+                    <ul>
+                        <li>${result.trend1 || 'N/A'}</li>
+                        <li>${result.trend2 || 'N/A'}</li>
+                        <li>${result.trend3 || 'N/A'}</li>
+                        <li>${result.trend4 || 'N/A'}</li>
+                        <li>${result.trend5 || 'N/A'}</li>
+                    </ul>
+                    <p>The IP address used for this query was ${result.ip_address}.</p>
+                    <p>Here’s a JSON extract of this record from the MongoDB:</p>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+                resultContainer.innerHTML = trends;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Twitter Trending Topics</h1>
+    <button onclick="runScript()">Click here to run the script</button>
+    <div id="result"></div>
+</body>
+</html>
